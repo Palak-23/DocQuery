@@ -96,6 +96,7 @@ def main():
 #     try:
 #         files = []
 #         for uploaded_file in uploaded_files:
+#             uploaded_file.seek(0)  # 🔧 Reset file pointer to start
 #             files.append(('files', (uploaded_file.name, uploaded_file.read(), 'application/pdf')))
         
 #         response = requests.post(f"{FLASK_API_URL}/upload", files=files)
@@ -109,11 +110,37 @@ def process_documents(uploaded_files):
     try:
         files = []
         for uploaded_file in uploaded_files:
-            uploaded_file.seek(0)  # 🔧 Reset file pointer to start
-            files.append(('files', (uploaded_file.name, uploaded_file.read(), 'application/pdf')))
+            # Reset file pointer to beginning
+            uploaded_file.seek(0)
+            
+            # Read the file content
+            file_content = uploaded_file.read()
+            
+            # DEBUG: Check if file content is empty
+            st.write(f"File: {uploaded_file.name}, Size: {len(file_content)} bytes")
+            
+            if len(file_content) == 0:
+                st.error(f"File {uploaded_file.name} is empty!")
+                return False
+            
+            # Reset file pointer again
+            uploaded_file.seek(0)
+            
+            files.append(('files', (uploaded_file.name, file_content, 'application/pdf')))
         
+        st.write(f"Sending {len(files)} files to server...")
         response = requests.post(f"{FLASK_API_URL}/upload", files=files)
+        
+        # Show server response
+        st.write(f"Server response: {response.status_code}")
+        if response.status_code != 200:
+            st.error(f"Server error: {response.text}")
+            return False
+        else:
+            st.success(f"Server response: {response.json()}")
+            
         return response.status_code == 200
+        
     except Exception as e:
         st.error(f"Error: {str(e)}")
         return False
