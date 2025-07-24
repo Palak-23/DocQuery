@@ -9,8 +9,8 @@ import json
 load_dotenv()
 
 # Configuration
-# FLASK_API_URL = "http://localhost:5000"
-FLASK_API_URL = "https://docquery-production.up.railway.app"
+FLASK_API_URL = "http://localhost:5000"
+# FLASK_API_URL = "https://docquery-production.up.railway.app"
 
 st.set_page_config(
     page_title="DocQuery - PDF Question Answering",
