@@ -91,11 +91,25 @@ def main():
         if st.session_state.get('docs_processed', False):
             st.success("✅ Documents are ready for querying!")
 
+# def process_documents(uploaded_files):
+#     """Send documents to Flask API for processing"""
+#     try:
+#         files = []
+#         for uploaded_file in uploaded_files:
+#             files.append(('files', (uploaded_file.name, uploaded_file.read(), 'application/pdf')))
+        
+#         response = requests.post(f"{FLASK_API_URL}/upload", files=files)
+#         return response.status_code == 200
+#     except Exception as e:
+#         st.error(f"Error: {str(e)}")
+#         return False
+
 def process_documents(uploaded_files):
     """Send documents to Flask API for processing"""
     try:
         files = []
         for uploaded_file in uploaded_files:
+            uploaded_file.seek(0)  # 🔧 Reset file pointer to start
             files.append(('files', (uploaded_file.name, uploaded_file.read(), 'application/pdf')))
         
         response = requests.post(f"{FLASK_API_URL}/upload", files=files)
@@ -103,6 +117,7 @@ def process_documents(uploaded_files):
     except Exception as e:
         st.error(f"Error: {str(e)}")
         return False
+
 
 def get_answer(question):
     """Get answer from Flask API"""
