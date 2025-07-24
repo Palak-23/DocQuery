@@ -20,9 +20,9 @@ CORS(app)
 # Initialize OpenAI client
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
-#added for railway deployment
-port = int(os.environ.get("PORT", 5000))
-app.run(host="0.0.0.0", port=port)
+#added for railway deployment -------
+# port = int(os.environ.get("PORT", 5000))
+# app.run(host="0.0.0.0", port=port)
 
 # Global variables for document storage
 document_chunks = []
